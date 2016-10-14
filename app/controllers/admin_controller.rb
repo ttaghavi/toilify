@@ -5,7 +5,6 @@ class AdminController < ApplicationController
   end
 
   def spotify
-    binding.pry
     spotify_user = RSpotify::User.new(request.env['omniauth.auth'])
     # Now you can access user's private data, create playlists and much more
 
