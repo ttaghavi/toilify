@@ -1,14 +1,46 @@
 require 'rspotify'
 
 class AdminController < ApplicationController
+  PLAYLIST_NAME = 'toilify_playlist'
+  TRACKS_PER_REQUEST = 100
+
   def index
   end
 
-  def spotify
+  def spotify_callback
     spotify_user = RSpotify::User.new(request.env['omniauth.auth'])
-    # Now you can access user's private data, create playlists and much more
+    session['spotify_user'] = spotify_user.to_hash
+    redirect_to action: 'playlist'
+  end
 
-    # Access private data
-    render json: spotify_user.playlists   #=> "example@email.com"
+  def playlist
+    tracks = []
+    spotify_user = RSpotify::User.new(session['spotify_user'])
+    #playlist = create_toilify_playlist(spotify_user)
+    playlist = get_playlist(spotify_user, 'Test')
+    loops = playlist.total / TRACKS_PER_REQUEST
+    
+    for current_iteration in 0..loops
+      tracks.concat(playlist.tracks(
+        offset: (current_iteration * TRACKS_PER_REQUEST) + 1,
+        limit: TRACKS_PER_REQUEST
+      ))
+    end
+
+    render template: "admin/list", locals: { tracks: tracks }
+  end
+
+  private
+
+  def get_playlist(spotify_user, name)
+    return spotify_user.playlists.find { |p| p.name == name }
+  end
+
+  def create_toilify_playlist(spotify_user)
+    playlist = spotify_user.playlists.find { |p| p.name == PLAYLIST_NAME }
+    if playlist.nil?
+      playlist = spotify_user.create_playlist!(PLAYLIST_NAME)
+    end
+    return playlist
   end
 end
