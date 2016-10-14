@@ -1,7 +1,14 @@
-span Search for:
+span Search :
 input.search
+div#results
 javascript:
-  $('input.search').searchbox();
+  $(document).ready(function() {
+    $('input.search').searchbox({
+      url: '/admin/search',
+      delay: 1000
+    });
+  });
+
 
 table#tracks.pure-table
   thead

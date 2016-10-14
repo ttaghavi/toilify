@@ -1,0 +1,13 @@
+javascript:
+  $("#results tr").click(function() {
+    $.ajax({
+      type: 'POST',
+      url: '/admin/tracks'
+  });
+table#results.pure-table
+  tbody
+  - for track in tracks
+    tr
+      td = track.name
+      td = track.album.name
+      td = track.artists.map(&:name).join(' ')
