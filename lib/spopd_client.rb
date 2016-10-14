@@ -21,6 +21,7 @@ class SpopdClient
           'Prompt' => /.*/,
           'Telnetmode' => false
         )
+        @client.cmd('status') # call to get rid of first line 'spop 0.0.1'
         return
       rescue Errno::ECONNREFUSED
         sleep(wait.to_f / 1000)
@@ -32,8 +33,7 @@ class SpopdClient
   def playlist_index
     @playlist_index ||= begin
       rp = client.cmd('ls')
-      # remove the first 11 characters: "spop 0.0.1\n"
-      json = JSON.parse(rp[11..-1])
+      json = JSON.parse(rp)
       playlist = json['playlists'].find { |pl| pl['name'] == PLAYLIST_NAME }
       raise("Playlist #{PLAYLIST_NAME} not found") if playlist.nil?
       playlist['index'].to_s.rjust(2, '0')
@@ -42,5 +42,25 @@ class SpopdClient
 
   def play
     client.cmd("play #{playlist_index}")
+    return current_song
+  end
+
+  def next
+    client.cmd('next')
+    return current_song
+  end
+
+  def stop
+    client.cmd('stop')
+  end
+
+  def current_song
+    current_song = nil
+    rp = client.cmd('status')
+    json = JSON.parse(rp)
+    if json['status'] == 'playing'
+      current_song = "#{json['artist']} - #{json['title']}"
+    end
+    return current_song
   end
 end

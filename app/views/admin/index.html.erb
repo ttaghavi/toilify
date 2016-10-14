@@ -4,18 +4,52 @@
   <%= link_to 'Sign in with Spotify', '/auth/spotify' %>
 </div>
 
-<div>
+<div id='message'></div>
+
+<div id='playing' style="<%= @current_song ? 'display: inline;' : 'display: none;' %>">
+  <div>Playing <span id='song'><%= @current_song %><span></div>
+  <%= link_to 'next', method: :post, class: 'link-next', remote: true do %>
+    <div>Next >></div>
+  <% end %>
+  <%= link_to 'stop', method: :post, class: 'link-stop', remote: true do %>
+    <div>Stop ■</div>
+  <% end %>
+</div>
+
+<div id='stopped' style="<%= @current_song ? 'display: none;' : 'display: inline;' %>">
   <%= link_to 'play', method: :post, class: 'link-play', remote: true do %>
-    <span>Start playing some music!<span>
+    <div>Start playing some music!</div>
   <% end %>
 </div>
 
 <script type="text/javascript">
-  $('.link-play').bind('ajax:beforeSend', function() {
-    $('#mySpinner').show();
+  $('.link-next').bind('ajax:complete', function(event, xhr, settings) {
+    song = xhr.responseJSON.current_song;
+    if( song && song !== "null" && song !== "undefined" ) {
+      $('#message').text('');
+      $('#song').text(song);
+    } else {
+      $('#message').text('Bummer that was the last song!');
+      $('#playing').hide();
+      $('#stopped').show();
+    }
   });
 
-  $('.link-play').bind('ajax:complete', function() {
-    $('#mySpinner').hide();
+  $('.link-stop').bind('ajax:complete', function() {
+    $('#message').text('');
+    $('#playing').hide();
+    $('#stopped').show();
+  });
+
+  $('.link-play').bind('ajax:complete', function(event, xhr, settings) {
+    song = xhr.responseJSON.current_song;
+    if( song && song !== "null" && song !== "undefined" ) {
+      $('#message').text('');
+      $('#song').text(song);
+      $('#playing').show();
+      $('#stopped').hide();
+    } else {
+      $('#message').text("mmm seems there aren't any songs in the playlis, go add some");
+    }
   });
  </script>
