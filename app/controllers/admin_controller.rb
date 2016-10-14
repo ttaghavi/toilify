@@ -1,10 +1,14 @@
 require 'rspotify'
 
 class AdminController < ApplicationController
-  PLAYLIST_NAME = 'toilify_playlist'
+  PLAYLIST_NAME = 'toilify_playlist'.freeze
   TRACKS_PER_REQUEST = 100
 
   def index
+  end
+
+  def play
+    SpopdClient.new(attemps: 3, wait: 200).play
   end
 
   def spotify_callback
@@ -19,7 +23,7 @@ class AdminController < ApplicationController
     #playlist = create_toilify_playlist(spotify_user)
     playlist = get_playlist(spotify_user, 'Test')
     loops = playlist.total / TRACKS_PER_REQUEST
-    
+
     for current_iteration in 0..loops
       tracks.concat(playlist.tracks(
         offset: (current_iteration * TRACKS_PER_REQUEST) + 1,

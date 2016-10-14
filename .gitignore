@@ -21,3 +21,8 @@
 .byebug_history
 
 *.swp
+
+
+# ignore for now
+NOTES.md
+Vagrantfile

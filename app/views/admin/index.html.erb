@@ -1,4 +1,21 @@
-<h1>Admin#index</h1>
-<p>Find me in app/views/admin/index.html.erb</p>
+<h1>Hello barcoonaut!</h1>
 
-<%= link_to 'Sign in with Spotify', '/auth/spotify' %>
+<div>
+  <%= link_to 'Sign in with Spotify', '/auth/spotify' %>
+</div>
+
+<div>
+  <%= link_to 'play', method: :post, class: 'link-play', remote: true do %>
+    <span>Start playing some music!<span>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+  $('.link-play').bind('ajax:beforeSend', function() {
+    $('#mySpinner').show();
+  });
+
+  $('.link-play').bind('ajax:complete', function() {
+    $('#mySpinner').hide();
+  });
+ </script>
