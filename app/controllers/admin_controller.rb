@@ -50,7 +50,11 @@ class AdminController < ApplicationController
   def search
     render nothing: true and return if params['query'].empty?
     tracks = RSpotify::Track.search(params['query'], limit: 10)
+    binding.pry
     render template: 'admin/search', layout: false, locals: { tracks: tracks }
+  end
+
+  def add
   end
 
   private
