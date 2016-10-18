@@ -1,26 +1,25 @@
-span Search :
 input.search
 div#results
+
 javascript:
   $(document).ready(function() {
     $('input.search').searchbox({
-      url: '/admin/search',
+      url: '/tracks/search',
       delay: 1000
     });
   });
 
-
-table#tracks.pure-table
+table#tracks class='table table-hover'
   thead
     tr
+      th
       th Song
       th Album
       th Artist
-      th Delete
   tbody
   - for track in tracks
     tr
+      td: a data-method='delete' href='/tracks/#{track.id}': img src='/assets/delete-icon-small.png'
       td = track.name
       td = track.album.name
       td = track.artists.map(&:name).join(' ')
-      td: a data-method='delete' href='/tracks/#{track.id}': img src='/assets/delete-icon-small.png'

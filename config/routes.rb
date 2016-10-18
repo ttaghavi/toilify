@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
-  get 'admin/index'
-  post 'admin/play'
-  post 'admin/next'
-  post 'admin/stop'
-  get 'admin/search', to: 'admin#search'
-  get 'admin/playlist', to: 'admin#playlist'
-  get '/auth/spotify/callback', to: 'admin#spotify_callback'
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :tracks, only: [:index, :update, :destroy] do
+    get 'search', on: :collection
+    get 'login', on: :collection
+  end
+
+  get '/', to: 'tracks#index' 
+  get '/auth/spotify/callback', to: 'tracks#spotify_callback'
 end

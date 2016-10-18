@@ -32,6 +32,7 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'rspotify'
 gem 'slim'
+gem 'bootstrap-sass', '~> 3.3.6'
 gem 'net-telnet'
 
 group :development, :test do

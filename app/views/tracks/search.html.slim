@@ -1,14 +1,16 @@
 javascript:
   $("#results tr").click(function() {
+    var trackId = $(this).attr('track-id');
     $.ajax({
-      type: 'POST',
-      url: '/admin/tracks'
+      type: 'PUT',
+      url: '/tracks/' + trackId
     });
   });
-table#results.pure-table
+
+table#results class='table table-hover bg-info'
   tbody
   - for track in tracks
-    tr
+    tr track-id="#{track.id}"
       td = track.name
       td = track.album.name
       td = track.artists.map(&:name).join(' ')
