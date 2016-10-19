@@ -7,19 +7,31 @@ javascript:
       url: '/tracks/search',
       delay: 1000
     });
+    $(document).click(function(e) {
+      if(!$(e.target).is("#results, #results *")) {
+        $('#results').empty();
+      }
+    });
+    $(document).on('click', 'table#tracks a', function() {
+      $(this).closest('tr').remove();
+    });
   });
 
-table#tracks class='table table-hover'
+table id='tracks' class='table table-hover'
   thead
     tr
       th
       th Song
       th Album
       th Artist
-  tbody
-  - for track in tracks
-    tr
-      td: a data-method='delete' href='/tracks/#{track.id}': img src='/assets/delete-icon-small.png'
-      td = track.name
-      td = track.album.name
-      td = track.artists.map(&:name).join(' ')
+  - if tracks.any?
+    - for track in tracks
+      tr
+        td
+          a data-method='delete' href='/tracks/#{track.id}'
+            img src='/assets/delete-icon-small.png'
+        td = track.name
+        td = track.album.name
+        td = track.artists.map(&:name).join(' ')
+  - else
+    tbody

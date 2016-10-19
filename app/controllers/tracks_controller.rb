@@ -15,7 +15,7 @@ class TracksController < ApplicationController
 
     for current_iteration in 0..loops
       tracks.concat(playlist.tracks(
-        offset: (current_iteration * TRACKS_PER_REQUEST) + 1,
+        offset: (current_iteration * TRACKS_PER_REQUEST),
         limit: TRACKS_PER_REQUEST
       ))
     end
@@ -36,6 +36,7 @@ class TracksController < ApplicationController
     track = RSpotify::Track.find(params['id'])
     playlist = get_playlist()
     playlist.add_tracks!([track])
+    head :ok
   end
 
   def destroy

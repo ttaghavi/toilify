@@ -1,16 +1,21 @@
 javascript:
-  $("#results tr").click(function() {
+  $("table#results tr").click(function() {
     var trackId = $(this).attr('track-id');
     $.ajax({
       type: 'PUT',
       url: '/tracks/' + trackId
     });
+    var row = $(this).clone().removeAttr('track-id');
+    row.children('.hidden').removeClass('hidden');
+    row.appendTo($('table#tracks tbody'));
   });
 
-table#results class='table table-hover bg-info'
-  tbody
+table id='results' class='table table-hover bg-info'
   - for track in tracks
     tr track-id="#{track.id}"
+      td class='hidden'
+        a data-method='delete' href='/tracks/#{track.id}'
+          img src='/assets/delete-icon-small.png'
       td = track.name
       td = track.album.name
       td = track.artists.map(&:name).join(' ')
